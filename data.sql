@@ -1,4 +1,4 @@
-\c jobly_test
+\c jobly
 
 CREATE TABLE companies (
     handle text PRIMARY KEY,
@@ -8,11 +8,13 @@ CREATE TABLE companies (
     logo_url text
 );
 
--- CREATE TABLE messages (
---     id SERIAL PRIMARY KEY,
---     from_username text NOT NULL REFERENCES users,
---     to_username text NOT NULL REFERENCES users,
---     body text NOT NULL,
---     sent_at timestamp with time zone NOT NULL,
---     read_at timestamp with time zone
--- );
+
+CREATE TABLE jobs (
+    id SERIAL PRIMARY KEY,
+    title text NOT NULL,
+    salary money NOT NULL,
+    equity numeric NOT NULL CHECK (equity >= 0.00 AND equity <=1.00 ),
+    company_handle text NOT NULL REFERENCES companies(handle) ON DELETE CASCADE,
+    date_posted timestamp with time zone DEFAULT NOW()
+);
+

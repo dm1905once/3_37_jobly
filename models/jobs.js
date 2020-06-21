@@ -20,6 +20,18 @@ class Jobs{
         return jobs.rows;
     }
 
+    static async getJobsByCompany(companyHandle){
+
+        const jobs = await db.query(
+            `SELECT id, title, salary, equity, date_posted
+            FROM jobs
+            WHERE company_handle = $1`,
+            [companyHandle]
+        );
+
+        return jobs.rows;
+    }
+
     static async getJob(id){
         const job = await db.query(
             `SELECT id, title, salary, equity, company_handle, date_posted

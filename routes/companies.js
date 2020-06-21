@@ -3,6 +3,7 @@ const jsonschema = require("jsonschema");
 const ExpressError = require("../helpers/expressError");
 const newCompanySchema = require("../schemas/newCompanySchema.json")
 const Companies = require("../models/companies")
+const Jobs = require("../models/jobs")
 
 const router = new express.Router();
 
@@ -38,7 +39,18 @@ router.post("/", async function(req, res, next){
 router.get("/:handle", async function(req, res, next){
     try{
         const company = await Companies.getCompany(req.params.handle);
-        return res.json({company});
+        const companyJobs = await Jobs.getJobsByCompany(req.params.handle);
+        return res.json( 
+            {company: {
+                    handle: company.handle,
+                    name: company.name,
+                    num_employees: company.num_employees,
+                    description: company.description,
+                    logo_url: company.logo_url,
+                    jobs: companyJobs
+                }
+            }
+        );
     } catch (err) {
     return next(err);
   }

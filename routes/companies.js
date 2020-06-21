@@ -22,11 +22,11 @@ router.get("/", async function(req, res, next){
 router.post("/", async function(req, res, next){
     try{
         const validBook = jsonschema.validate(req.body, newCompanySchema);
-        if (validBook){
+        if (validBook.valid){
             const company = await Companies.createCompany(req.body);
             return res.status(201).json({company: company});
         } else {
-            const errors = validation.errors.map(error => error.stack);
+            const errors = validBook.errors.map(error => error.stack);
             const error = new ExpressError(errors, 400);
             return next(error);
         }

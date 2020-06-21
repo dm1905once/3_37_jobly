@@ -18,3 +18,13 @@ CREATE TABLE jobs (
     date_posted timestamp with time zone DEFAULT NOW()
 );
 
+
+CREATE TABLE users (
+    username text PRIMARY KEY,
+    password text NOT NULL,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    email text NOT NULL UNIQUE,
+    photo_url text,
+    is_admin boolean DEFAULT false
+)

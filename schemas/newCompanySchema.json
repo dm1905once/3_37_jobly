@@ -1,0 +1,63 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": {},
+    "examples": [
+        {
+            "handle": "FirstCompany",
+            "name": "The First Company",
+            "num_employees": 264,
+            "description": "First company ever added to the website",
+            "logo_url": "http://logo.com/firstcompany.png"
+        }
+    ],
+    "required": [
+        "handle",
+        "name"
+    ],
+    "additionalProperties": true,
+    "properties": {
+        "handle": {
+            "$id": "#/properties/handle",
+            "type": "string",
+            "title": "Company handle",
+            "description": "Company Identifier",
+            "examples": ["FirstCompany"]
+        },
+        "name": {
+            "$id": "#/properties/name",
+            "type": "string",
+            "title": "Name of the company",
+            "description": "Full name of the company",
+            "default": "",
+            "examples": ["The First Company"]
+        },
+        "num_employees": {
+            "$id": "#/properties/pages",
+            "type": "integer",
+            "title": "Number of employees",
+            "description": "Total number of employees",
+            "default": 1,
+            "examples": [264]
+        },
+        "description": {
+            "$id": "#/properties/description",
+            "type": "string",
+            "title": "Description of the company",
+            "description": "Company description.",
+            "default": "",
+            "examples": ["First company ever added to the website"]
+        },
+        "logo_url": {
+            "$id": "#/properties/logo_url",
+            "type": "string",
+            "title": "URL with the companys logo",
+            "description": "Logo",
+            "default": "",
+            "examples": ["http://logo.com/firstcompany.png"]
+        }
+    }
+}

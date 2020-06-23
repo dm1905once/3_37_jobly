@@ -2,6 +2,7 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 const partialUpdate = require("../helpers/partialUpdate");
 
+
 class Users{
 
     static async getUsers(){
@@ -19,6 +20,29 @@ class Users{
         return user.rows[0];
     }
 
+    static async authenticateUser(username, password) {
+        const results = await db.query(
+          `SELECT username, password, is_admin 
+          FROM users
+          WHERE username = $1`, 
+          [username] );
+        const user = results.rows[0];
+        if (user){
+          return await bcrypt.compare(password, user.password);
+        } 
+      }
+
+    static async getUserToken(username){
+        const user = await db.query(
+            `SELECT username, is_admin
+            FROM users
+            WHERE username = $1`, 
+            [username]);
+        if (user) {
+            return user.rows[0];
+        }
+    }
+
     static async createUser(userObject){
         const hashedPwd = await bcrypt.hash(userObject.password, 12);
         const newUser = await db.query(
@@ -33,10 +57,6 @@ class Users{
             VALUES($1, $2, $3, $4, $5, $6, $7)
             RETURNING
                 username,
-                first_name,
-                last_name,
-                email,
-                photo_url,
                 is_admin`,
             [
                 userObject.username,

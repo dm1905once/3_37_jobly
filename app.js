@@ -7,15 +7,19 @@ const app = express();
 const companiesRoutes = require("./routes/companies");
 const jobsRoutes = require("./routes/jobs");
 const usersRoutes = require("./routes/users");
+const authRoutes = require("./routes/auth");
+const {authenticateJWT} = require("./middleware/auth");
 
 // Middleware
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(authenticateJWT);
 
 // Routes
 app.use("/companies", companiesRoutes);
 app.use("/jobs", jobsRoutes);
 app.use("/users", usersRoutes);
+app.use("/login", authRoutes);
 
 
 /** 404 handler */

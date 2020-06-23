@@ -1,13 +1,14 @@
 const express = require("express");
 const jsonschema = require("jsonschema");
 const ExpressError = require("../helpers/expressError");
-const newCompanySchema = require("../schemas/newCompanySchema.json")
-const Companies = require("../models/companies")
-const Jobs = require("../models/jobs")
+const newCompanySchema = require("../schemas/newCompanySchema.json");
+const Companies = require("../models/companies");
+const Jobs = require("../models/jobs");
+const { ensureLoggedIn, ensureAdmin } = require("../middleware/auth");
 
 const router = new express.Router();
 
-router.get("/", async function(req, res, next){
+router.get("/", ensureLoggedIn, async function(req, res, next){
     const parameters = req.query;
     if (Object.keys(parameters).includes("min_employees") && Object.keys(parameters).includes("max_employees")){
         if (parseInt(parameters['min_employees']) > parseInt(parameters['max_employees'])){
@@ -20,7 +21,7 @@ router.get("/", async function(req, res, next){
 })
 
 
-router.post("/", async function(req, res, next){
+router.post("/", ensureAdmin, async function(req, res, next){
     try{
         const validBook = jsonschema.validate(req.body, newCompanySchema);
         if (validBook.valid){
@@ -36,7 +37,7 @@ router.post("/", async function(req, res, next){
   }
 });
 
-router.get("/:handle", async function(req, res, next){
+router.get("/:handle", ensureLoggedIn, async function(req, res, next){
     try{
         const company = await Companies.getCompany(req.params.handle);
         const companyJobs = await Jobs.getJobsByCompany(req.params.handle);
@@ -56,7 +57,7 @@ router.get("/:handle", async function(req, res, next){
   }
 });
 
-router.patch("/:handle", async function(req, res, next){
+router.patch("/:handle", ensureAdmin, async function(req, res, next){
     try{
         const company = await Companies.updateCompany(req.body, req.params.handle);
         return res.json({company});
@@ -65,7 +66,7 @@ router.patch("/:handle", async function(req, res, next){
   }
 });
 
-router.delete("/:handle", async function(req, res, next){
+router.delete("/:handle", ensureAdmin, async function(req, res, next){
     try{
         const company = await Companies.deleteCompany(req.params.handle);
         if (company) return res.json({"message": "Company deleted"});
